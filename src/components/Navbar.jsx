@@ -1,4 +1,4 @@
-import logo from "../assets/images/hero.png"; // ganti dengan logo asli nanti
+import logo from "../assets/images/logo2.png"; // ganti dengan logo asli nanti
 
 function Navbar() {
   return (
