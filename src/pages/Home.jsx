@@ -7,7 +7,6 @@ import logoAsli from "../assets/images/logoasli.png";
 function Home() {
   return (
     <>
-      <Navbar />
 
       {/* HERO SECTION */}
       <section className="pt-28 pb-20 bg-gradient-to-r from-blue-700 to-blue-900">
@@ -148,7 +147,6 @@ function Home() {
         </div>
       </section>
 
-      <Footer />
     </>
   );
 }
