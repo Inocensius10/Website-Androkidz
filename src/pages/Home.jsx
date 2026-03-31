@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProgramCard from "../components/ProgramCard";
@@ -5,14 +6,62 @@ import heroImage from "../assets/images/elementweb.png";
 import logoAsli from "../assets/images/logoasli.png";
 
 function Home() {
+  const [form, setForm] = useState({
+    namaAnak: "",
+    namaOrtu: "",
+    noHp: "",
+    umur: "",
+    kelas: "",
+    kategori: "",
+    sekolah: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    let kategori = form.kategori;
+
+    if (name === "kelas") {
+      if (value === "TKA" || value === "TKB") {
+        kategori = "Young Engineer";
+      } else if (value.includes("SD")) {
+        kategori = "Teenager";
+      } else if (value.includes("SMP")) {
+        kategori = "Junior";
+      } else if (value.includes("SMA")) {
+        kategori = "Senior";
+      }
+    }
+
+    setForm({
+      ...form,
+      [name]: value,
+      kategori,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const message = `Halo, saya ingin mendaftarkan anak saya:
+
+Nama Anak: ${form.namaAnak}
+Nama Orang Tua: ${form.namaOrtu}
+No HP: ${form.noHp}
+Umur: ${form.umur}
+Kelas: ${form.kelas}
+Kategori: ${form.kategori}
+Asal Sekolah: ${form.sekolah}`;
+
+    const url = `https://wa.me/6281774851939?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  };
+
   return (
     <>
-
       {/* HERO SECTION */}
       <section className="pt-28 pb-20 bg-gradient-to-r from-blue-700 to-blue-900">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 items-center gap-10">
-          
-          {/* LEFT CONTENT */}
           <div className="text-white">
             <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
               Tomorrow’s Innovators Start Here
@@ -28,7 +77,6 @@ function Home() {
             </button>
           </div>
 
-          {/* RIGHT IMAGE */}
           <div className="flex justify-center md:justify-end">
             <img
               src={heroImage}
@@ -39,114 +87,91 @@ function Home() {
         </div>
       </section>
 
-
-      {/* SEKILAS TENTANG KAMI */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 items-center gap-8">
-          
-          {/* LEFT - LOGO */}
-          <div className="flex justify-center">
-            <img
-              src={logoAsli}
-              alt="Logo AndroKidz"
-              className="w-full max-w-xs object-contain"
-            />
-          </div>
-
-          {/* RIGHT - TEXT */}
-          <div className="text-center md:text-left">
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-6">
-              Sekilas Tentang Kami
-            </h2>
-
-            <p className="text-lg text-gray-700 leading-relaxed mb-8">
-              AndroKidz didirikan pada tahun 2026 oleh Aulia Febriani, S.Sn. dengan komitmen menghadirkan pendidikan berbasis Life Skill dan teknologi melalui kegiatan merakit robot dan coding mulai usia 4 tahun hingga SMA untuk melatih motorik, kreativitas, serta kecerdasan anak secara menyeluruh.
-            </p>
-
-            <button className="border border-blue-800 text-blue-800 font-semibold px-6 py-3 rounded-lg hover:bg-blue-800 hover:text-white transition">
-              Kenal Lebih Dekat
-            </button>
-          </div>
-
-        </div>
-      </section>
-
-
-
-
-
-      {/* WHY ANDROKIDZ */}
-      <section className="py-16 px-6 bg-gray-50 text-center">
-        <h2 className="text-3xl font-bold mb-4">
-          Kenapa harus belajar Coding & Robotics di AndroKidz?
-        </h2>
-        <p className="max-w-3xl mx-auto text-gray-600">
-          AndroKidz menghadirkan pembelajaran berbasis teknologi masa depan
-          dengan metode fun learning, hands-on project, dan pendekatan logika
-          yang membantu anak berpikir kritis, kreatif, dan percaya diri.
-        </p>
-      </section>
-
-      {/* PROGRAM */}
-      <section className="py-16 px-6 bg-white">
-        <h2 className="text-3xl font-bold text-center mb-10">
-          Pilihan Program Kami
-        </h2>
-
-        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          <ProgramCard
-            title="Kelas Robotics"
-            description="Belajar robotik menggunakan LEGO dan perangkat interaktif untuk melatih logika, kreativitas, dan problem solving anak."
-          />
-
-          <ProgramCard
-            title="Kelas Coding"
-            description="Mengenal dunia pemrograman, AI, Data Science, dan Machine Learning dengan pendekatan yang mudah dan menyenangkan."
-          />
-        </div>
-      </section>
-
-      {/* FORM PENDAFTARAN KEDUA */}
+      {/* FORM PENDAFTARAN */}
       <section className="py-16 px-6 bg-gray-50">
         <div className="max-w-xl mx-auto bg-white p-8 rounded-xl shadow">
           <h2 className="text-xl font-semibold text-center mb-6">
             Daftarkan anak Anda sekarang dan dapatkan trial gratis
           </h2>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <input
               type="text"
-              placeholder="Nama Wali Murid"
+              name="namaAnak"
+              placeholder="Nama Lengkap Anak"
               className="w-full border p-3 rounded"
+              onChange={handleChange}
             />
+
             <input
               type="text"
-              placeholder="No WhatsApp"
+              name="namaOrtu"
+              placeholder="Nama Orang Tua"
               className="w-full border p-3 rounded"
+              onChange={handleChange}
             />
+
             <input
               type="text"
-              placeholder="Nama Siswa"
+              name="noHp"
+              placeholder="Nomor Telepon Orang Tua"
               className="w-full border p-3 rounded"
+              onChange={handleChange}
             />
+
             <input
-              type="text"
-              placeholder="Kelas Siswa"
+              type="number"
+              name="umur"
+              placeholder="Umur Anak"
               className="w-full border p-3 rounded"
+              onChange={handleChange}
             />
+
+            <select
+              name="kelas"
+              className="w-full border border-gray-300 p-3 rounded appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={handleChange}
+            >
+              <option value="">Pilih Kelas</option>
+              <option value="TKA">TKA</option>
+              <option value="TKB">TKB</option>
+              <option value="1 SD">1 SD</option>
+              <option value="2 SD">2 SD</option>
+              <option value="3 SD">3 SD</option>
+              <option value="4 SD">4 SD</option>
+              <option value="5 SD">5 SD</option>
+              <option value="6 SD">6 SD</option>
+              <option value="7 SMP">7 SMP</option>
+              <option value="8 SMP">8 SMP</option>
+              <option value="9 SMP">9 SMP</option>
+              <option value="10 SMA">10 SMA</option>
+              <option value="11 SMA">11 SMA</option>
+              <option value="12 SMA">12 SMA</option>
+            </select>
+
             <input
               type="text"
+              name="kategori"
+              value={form.kategori}
+              placeholder="Kategori"
+              className="w-full border p-3 rounded bg-gray-100"
+              readOnly
+            />
+
+            <input
+              type="text"
+              name="sekolah"
               placeholder="Asal Sekolah"
               className="w-full border p-3 rounded"
+              onChange={handleChange}
             />
 
             <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">
-              Coba kelas sekarang
+              Coba Kelas Sekarang
             </button>
           </form>
         </div>
       </section>
-
     </>
   );
 }
