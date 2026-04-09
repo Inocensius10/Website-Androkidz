@@ -43,7 +43,7 @@ function Home() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const message = `Halo, saya ingin mendaftarkan anak saya:
+    const message = `Halo, saya ingin mendaftarkan anak saya ke AndroKidz:
 
 Nama Anak: ${form.namaAnak}
 Nama Orang Tua: ${form.namaOrtu}
@@ -53,7 +53,7 @@ Kelas: ${form.kelas}
 Kategori: ${form.kategori}
 Asal Sekolah: ${form.sekolah}`;
 
-    const url = `https://wa.me/6281774851939?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/628211023108?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank");
   };
 
