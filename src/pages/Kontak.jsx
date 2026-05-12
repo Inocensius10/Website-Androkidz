@@ -24,10 +24,10 @@ function Kontak() {
             <div className="text-left">
             <p className="text-gray-500 text-sm">Nomor Telepon</p>
             <p className="text-lg font-semibold text-blue-900">
-                Alvaro
+                Ibu Aulia
             </p>
             <p className="text-gray-700">
-                +62 812-XXXX-XXXX
+                08211023108
             </p>
             </div>
         </div>
