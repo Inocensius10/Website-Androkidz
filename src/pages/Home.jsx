@@ -1,9 +1,16 @@
-import { useState } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import ProgramCard from "../components/ProgramCard";
+import { useEffect, useState } from "react";
 import heroImage from "../assets/images/elementweb.png";
-import logoAsli from "../assets/images/logoasli.png";
+
+import gambar1 from "../assets/images/galeri/gambar1.jpeg";
+import gambar2 from "../assets/images/galeri/gambar2.jpeg";
+import gambar3 from "../assets/images/galeri/gambar3.jpeg";
+import gambar4 from "../assets/images/galeri/gambar4.jpeg";
+import gambar5 from "../assets/images/galeri/gambar5.jpeg";
+import gambar6 from "../assets/images/galeri/gambar6.jpeg";
+import gambar7 from "../assets/images/galeri/gambar7.jpeg";
+import gambar8 from "../assets/images/galeri/gambar8.jpeg";
+import gambar9 from "../assets/images/galeri/gambar9.jpeg";
+import gambar10 from "../assets/images/galeri/gambar10.jpeg";
 
 function Home() {
   const [form, setForm] = useState({
@@ -15,6 +22,47 @@ function Home() {
     kategori: "",
     sekolah: "",
   });
+
+  const heroSlides = [
+    {
+      title: "Belajar Teknologi Jadi Lebih Seru",
+      description:
+        "Fun with LEGO, learning with AI, Data Science, Machine Learning, Robotics & Coding dalam suasana yang menyenangkan.",
+    },
+    {
+      title: "Membangun Kreativitas Anak Sejak Dini",
+      description:
+        "AndroKidz membantu anak berkembang lewat pembelajaran aktif, eksploratif, dan berbasis proyek.",
+    },
+    {
+      title: "Siap Hadapi Dunia Digital",
+      description:
+        "Program pembelajaran dirancang untuk melatih logika, problem solving, dan keberanian mencoba hal baru.",
+    },
+  ];
+
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const galleryImages = [
+    gambar1,
+    gambar2,
+    gambar3,
+    gambar4,
+    gambar5,
+    gambar6,
+    gambar7,
+    gambar8,
+    gambar9,
+    gambar10,
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [heroSlides.length]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,8 +107,8 @@ Asal Sekolah: ${form.sekolah}`;
 
   return (
     <>
-      {/* HERO SECTION */}
-      <section className="pt-28 pb-20 bg-gradient-to-r from-blue-700 to-blue-900">
+      {/* HERO CAROUSEL */}
+      <section className="pt-28 pb-20 bg-gradient-to-r from-orange-500 to-orange-700">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 items-center gap-10">
           <div className="text-white">
             <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
@@ -72,7 +120,7 @@ Asal Sekolah: ${form.sekolah}`;
               Robotics & Coding—all in one place.
             </p>
 
-            <button className="bg-white text-blue-700 font-semibold px-8 py-4 rounded-xl shadow-lg hover:bg-gray-100 transition">
+            <button className="bg-white text-orange-700 font-semibold px-8 py-4 rounded-xl shadow-lg hover:bg-orange-100 transition">
               Coba Kelas Gratis
             </button>
           </div>
@@ -85,6 +133,82 @@ Asal Sekolah: ${form.sekolah}`;
             />
           </div>
         </div>
+      </section>
+
+      {/* VISI DAN MISI */}
+      <section className="py-16 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
+            Visi dan Misi
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-orange-50 border border-orange-100 rounded-2xl p-8 shadow-sm">
+              <h3 className="text-2xl font-semibold text-orange-700 mb-4">
+                Visi
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                Menjadi lembaga pembelajaran teknologi anak yang unggul, kreatif,
+                dan menyenangkan dalam membentuk generasi muda yang siap
+                menghadapi era digital.
+              </p>
+            </div>
+
+            <div className="bg-orange-50 border border-orange-100 rounded-2xl p-8 shadow-sm">
+              <h3 className="text-2xl font-semibold text-orange-700 mb-4">
+                Misi
+              </h3>
+              <ul className="space-y-3 text-gray-700 leading-relaxed list-disc pl-5">
+                <li>Menyediakan pembelajaran teknologi yang interaktif dan mudah dipahami.</li>
+                <li>Mendorong kreativitas, logika, dan kemampuan problem solving anak.</li>
+                <li>Menciptakan suasana belajar yang menyenangkan dan aman.</li>
+                <li>Mengenalkan dunia coding, robotik, dan AI sejak usia dini.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* GALERI SLIDER */}
+      <section className="py-16 px-6 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
+            Galeri Kegiatan
+          </h2>
+
+          <div className="overflow-hidden">
+            <div
+              className="flex w-max gap-4"
+              style={{
+                animation: "galleryScroll 35s linear infinite",
+              }}
+            >
+              {[...galleryImages, ...galleryImages].map((img, index) => (
+                <div
+                  key={index}
+                  className="w-56 md:w-64 flex-shrink-0 rounded-2xl overflow-hidden shadow-md bg-white"
+                >
+                  <img
+                    src={img}
+                    alt={`Galeri ${index + 1}`}
+                    className="w-full h-40 object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <style>{`
+          @keyframes galleryScroll {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+        `}</style>
       </section>
 
       {/* FORM PENDAFTARAN */}
@@ -129,7 +253,7 @@ Asal Sekolah: ${form.sekolah}`;
 
             <select
               name="kelas"
-              className="w-full border border-gray-300 p-3 rounded appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 p-3 rounded appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"
               onChange={handleChange}
             >
               <option value="">Pilih Kelas</option>
@@ -166,7 +290,7 @@ Asal Sekolah: ${form.sekolah}`;
               onChange={handleChange}
             />
 
-            <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">
+            <button className="w-full bg-orange-600 text-white py-3 rounded-lg hover:bg-orange-700 transition">
               Coba Kelas Sekarang
             </button>
           </form>

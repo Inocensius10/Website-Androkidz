@@ -20,7 +20,9 @@ function Navbar() {
     : "bg-white shadow-sm";
 
   return (
-    <nav className={`w-full fixed top-0 z-50 transition-all duration-300 ${navStyle}`}>
+    <nav
+      className={`w-full fixed top-0 z-50 transition-all duration-300 ${navStyle}`}
+    >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link to="/">
           <img
@@ -30,49 +32,137 @@ function Navbar() {
           />
         </Link>
 
+        {/* MENU DESKTOP */}
         <ul className="hidden md:flex items-center gap-8 text-gray-700 font-medium">
-          <li><Link to="/" className="hover:text-blue-600 transition">Home</Link></li>
-          <li><Link to="/about" className="hover:text-blue-600 transition">About Us</Link></li>
-          <li><Link to="/kurikulum" className="hover:text-blue-600 transition">Kurikulum</Link></li>
-          <li><Link to="/galery" className="hover:text-blue-600 transition">Galery</Link></li>
-          <li><Link to="/kontak" className="hover:text-blue-600 transition">Kontak</Link></li>
+          <li>
+            <Link to="/" className="hover:text-orange-500 transition">
+              Home
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/about"
+              className="hover:text-orange-500 transition"
+            >
+              About Us
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/kurikulum"
+              className="hover:text-orange-500 transition"
+            >
+              Kurikulum
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/galery"
+              className="hover:text-orange-500 transition"
+            >
+              Galery
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/kontak"
+              className="hover:text-orange-500 transition"
+            >
+              Kontak
+            </Link>
+          </li>
         </ul>
 
+        {/* BUTTON DESKTOP */}
         <div className="hidden md:block">
           <Link
             to="/admin/login"
-            className="border border-blue-700 text-blue-700 font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 hover:text-white transition inline-block"
+            className="border border-orange-500 text-orange-500 font-semibold px-6 py-2 rounded-lg hover:bg-orange-500 hover:text-white transition duration-300 inline-block"
           >
             Masuk
           </Link>
         </div>
 
+        {/* HAMBURGER */}
         <button
           className="md:hidden flex flex-col gap-1"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          <span className={`block w-6 h-0.5 bg-black transition ${menuOpen ? "translate-y-1.5 rotate-45" : ""}`}></span>
-          <span className={`block w-6 h-0.5 bg-black transition ${menuOpen ? "opacity-0" : ""}`}></span>
-          <span className={`block w-6 h-0.5 bg-black transition ${menuOpen ? "-translate-y-1.5 -rotate-45" : ""}`}></span>
+          <span
+            className={`block w-6 h-0.5 bg-black transition ${
+              menuOpen ? "translate-y-1.5 rotate-45" : ""
+            }`}
+          ></span>
+
+          <span
+            className={`block w-6 h-0.5 bg-black transition ${
+              menuOpen ? "opacity-0" : ""
+            }`}
+          ></span>
+
+          <span
+            className={`block w-6 h-0.5 bg-black transition ${
+              menuOpen ? "-translate-y-1.5 -rotate-45" : ""
+            }`}
+          ></span>
         </button>
       </div>
 
+      {/* MOBILE MENU */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ${
           menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         } ${navStyle}`}
       >
         <div className="px-6 pb-6 space-y-4">
-          <Link to="/" onClick={() => setMenuOpen(false)} className="block hover:text-blue-600">Home</Link>
-          <Link to="/about" onClick={() => setMenuOpen(false)} className="block hover:text-blue-600">About Us</Link>
-          <Link to="/kurikulum" onClick={() => setMenuOpen(false)} className="block hover:text-blue-600">Kurikulum</Link>
-          <Link to="/galery" onClick={() => setMenuOpen(false)} className="block hover:text-blue-600">Galery</Link>
-          <Link to="/kontak" onClick={() => setMenuOpen(false)} className="block hover:text-blue-600">Kontak</Link>
+          <Link
+            to="/"
+            onClick={() => setMenuOpen(false)}
+            className="block hover:text-orange-500 transition"
+          >
+            Home
+          </Link>
+
+          <Link
+            to="/about"
+            onClick={() => setMenuOpen(false)}
+            className="block hover:text-orange-500 transition"
+          >
+            About Us
+          </Link>
+
+          <Link
+            to="/kurikulum"
+            onClick={() => setMenuOpen(false)}
+            className="block hover:text-orange-500 transition"
+          >
+            Kurikulum
+          </Link>
+
+          <Link
+            to="/galery"
+            onClick={() => setMenuOpen(false)}
+            className="block hover:text-orange-500 transition"
+          >
+            Galery
+          </Link>
+
+          <Link
+            to="/kontak"
+            onClick={() => setMenuOpen(false)}
+            className="block hover:text-orange-500 transition"
+          >
+            Kontak
+          </Link>
 
           <Link
             to="/admin/login"
             onClick={() => setMenuOpen(false)}
-            className="w-full border border-blue-700 text-blue-700 font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 hover:text-white transition inline-block text-center"
+            className="w-full border border-orange-500 text-orange-500 font-semibold px-6 py-2 rounded-lg hover:bg-orange-500 hover:text-white transition duration-300 inline-block text-center"
           >
             Masuk
           </Link>
