@@ -28,7 +28,7 @@ function Galery() {
 
   return (
     <div className="pt-28 pb-20 px-4 sm:px-6 max-w-7xl mx-auto">
-      <h1 className="text-4xl font-bold text-center mb-4">
+      <h1 className="text-center md:text-5xl font-bold text-blue-900 mb-4">
         Galery Kegiatan
       </h1>
 

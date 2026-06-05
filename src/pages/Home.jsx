@@ -1,16 +1,7 @@
 import { useEffect, useState } from "react";
 import heroImage from "../assets/images/elementweb.png";
+import { supabase } from "../lib/supabase";
 
-import gambar1 from "../assets/images/galeri/gambar1.jpeg";
-import gambar2 from "../assets/images/galeri/gambar2.jpeg";
-import gambar3 from "../assets/images/galeri/gambar3.jpeg";
-import gambar4 from "../assets/images/galeri/gambar4.jpeg";
-import gambar5 from "../assets/images/galeri/gambar5.jpeg";
-import gambar6 from "../assets/images/galeri/gambar6.jpeg";
-import gambar7 from "../assets/images/galeri/gambar7.jpeg";
-import gambar8 from "../assets/images/galeri/gambar8.jpeg";
-import gambar9 from "../assets/images/galeri/gambar9.jpeg";
-import gambar10 from "../assets/images/galeri/gambar10.jpeg";
 
 function Home() {
   const [form, setForm] = useState({
@@ -42,19 +33,26 @@ function Home() {
   ];
 
   const [activeSlide, setActiveSlide] = useState(0);
+  useEffect(() => {
+  fetchGallery();
+}, []);
 
-  const galleryImages = [
-    gambar1,
-    gambar2,
-    gambar3,
-    gambar4,
-    gambar5,
-    gambar6,
-    gambar7,
-    gambar8,
-    gambar9,
-    gambar10,
-  ];
+const fetchGallery = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("galery")
+      .select("*")
+      .order("id", { ascending: false });
+
+    if (error) throw error;
+
+    setGalleryImages(data || []);
+  } catch (err) {
+    console.error("Gallery Error:", err);
+  }
+};
+
+  const [galleryImages, setGalleryImages] = useState([]);;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -172,31 +170,71 @@ Asal Sekolah: ${form.sekolah}`;
       {/* GALERI SLIDER */}
       <section className="py-16 px-6 bg-gray-50">
         <div className="max-w-7xl mx-auto">
+
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
             Galeri Kegiatan
           </h2>
 
-          <div className="overflow-hidden">
-            <div
-              className="flex w-max gap-4"
-              style={{
-                animation: "galleryScroll 35s linear infinite",
-              }}
-            >
-              {[...galleryImages, ...galleryImages].map((img, index) => (
-                <div
-                  key={index}
-                  className="w-56 md:w-64 flex-shrink-0 rounded-2xl overflow-hidden shadow-md bg-white"
-                >
-                  <img
-                    src={img}
-                    alt={`Galeri ${index + 1}`}
-                    className="w-full h-40 object-cover"
-                  />
-                </div>
-              ))}
+          {galleryImages.length > 0 ? (
+            <div className="overflow-hidden">
+
+              <div
+                className="flex w-max gap-5"
+                style={{
+                  animation:
+                    "galleryScroll 40s linear infinite",
+                }}
+              >
+                {[...galleryImages, ...galleryImages].map(
+                  (item, index) => {
+                    const borderColor =
+                      index % 2 === 0
+                        ? "border-orange-500"
+                        : "border-blue-900";
+
+                    return (
+                      <div
+                        key={index}
+                        className={`
+                          w-64
+                          md:w-72
+                          flex-shrink-0
+                          rounded-3xl
+                          overflow-hidden
+                          shadow-lg
+                          border-4
+                          ${borderColor}
+                          bg-white
+                          hover:shadow-2xl
+                          transition-all
+                          duration-300
+                        `}
+                      >
+                        <img
+                          src={item.image}
+                          alt="Galeri AndroKidz"
+                          className="
+                            w-full
+                            h-48
+                            md:h-56
+                            object-cover
+                            hover:scale-110
+                            transition-transform
+                            duration-700
+                          "
+                        />
+                      </div>
+                    );
+                  }
+                )}
+              </div>
+
             </div>
-          </div>
+          ) : (
+            <div className="text-center text-gray-500">
+              Belum ada foto galeri.
+            </div>
+          )}
         </div>
 
         <style>{`
@@ -204,6 +242,7 @@ Asal Sekolah: ${form.sekolah}`;
             0% {
               transform: translateX(0);
             }
+
             100% {
               transform: translateX(-50%);
             }
