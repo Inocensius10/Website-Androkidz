@@ -1,19 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
 
 function AdminGalery() {
-
-  const [galery, setGalery] = useState([
-    {
-      id: 1,
-      judul: "Kelas Coding",
-      image: "https://via.placeholder.com/300x200",
-    },
-    {
-      id: 2,
-      judul: "Aktivitas Anak",
-      image: "https://via.placeholder.com/300x200",
-    },
-  ]);
+  const [galery, setGalery] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     judul: "",
@@ -22,68 +12,207 @@ function AdminGalery() {
 
   const [editId, setEditId] = useState(null);
 
-  // HANDLE IMAGE
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  // ==========================
+  // FETCH DATA
+  // ==========================
+  const fetchGalery = async () => {
+  const { data, error } = await supabase
+    .from("galery")
+    .select("*")
+    .order("id", { ascending: false });
 
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
+  if (error) {
+    console.error("FETCH ERROR:", error);
+    return;
+  }
 
-      setForm({
-        ...form,
-        image: imageUrl,
-      });
+  setGalery(data || []);
+};
+
+  useEffect(() => {
+    fetchGalery();
+  }, []);
+
+  // ==========================
+  // UPLOAD IMAGE
+  // ==========================
+  const handleImageChange = async (e) => {
+  const file = e.target.files[0];
+
+  if (!file) return;
+
+  try {
+    setLoading(true);
+
+    console.log("File dipilih:", file);
+
+    const fileExt = file.name.split(".").pop();
+
+    const fileName =
+      Date.now() +
+      "-" +
+      Math.random().toString(36).substring(2) +
+      "." +
+      fileExt;
+
+    console.log("Nama file:", fileName);
+
+    const { data: uploadData, error: uploadError } =
+      await supabase.storage
+        .from("androkidz")
+        .upload(fileName, file);
+
+    console.log("Upload Data:", uploadData);
+    console.log("Upload Error:", uploadError);
+
+    if (uploadError) {
+      alert("ERROR: " + uploadError.message);
+      return;
     }
-  };
 
+    const { data: publicData } =
+      supabase.storage
+        .from("androkidz")
+        .getPublicUrl(fileName);
+
+    console.log("Public URL:", publicData.publicUrl);
+
+    setForm((prev) => ({
+      ...prev,
+      image: publicData.publicUrl,
+    }));
+
+    alert("Upload berhasil");
+  } catch (err) {
+    console.error("FULL ERROR:", err);
+
+    alert(
+      err?.message ||
+      JSON.stringify(err) ||
+      "Unknown Error"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
+  // ==========================
   // SUBMIT
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // ==========================
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!form.judul || !form.image) return;
+  if (!form.judul || !form.image) {
+    alert("Lengkapi data terlebih dahulu");
+    return;
+  }
 
-    // EDIT
-    if (editId !== null) {
+  try {
+    if (editId) {
+      const { error } = await supabase
+        .from("galery")
+        .update({
+          judul: form.judul,
+          image: form.image,
+        })
+        .eq("id", editId);
 
-      const updatedGalery = galery.map((item) =>
-        item.id === editId
-          ? {
-              ...item,
-              judul: form.judul,
-              image: form.image,
-            }
-          : item
-      );
+      if (error) throw error;
 
-      setGalery(updatedGalery);
-      setEditId(null);
+      alert("Galery berhasil diupdate");
+    } else {
+      const { data, error } = await supabase
+        .from("galery")
+        .insert([
+          {
+            judul: form.judul,
+            image: form.image,
+          },
+        ])
+        .select();
+
+      console.log("INSERT DATA:", data);
+      console.log("INSERT ERROR:", error);
+
+      if (error) throw error;
+
+      alert("Galery berhasil ditambahkan");
     }
 
-    // TAMBAH
-    else {
-
-      const newGalery = {
-        id: Date.now(),
-        judul: form.judul,
-        image: form.image,
-      };
-
-      setGalery([...galery, newGalery]);
-    }
-
-    // RESET
     setForm({
       judul: "",
       image: "",
     });
-  };
 
+    setEditId(null);
+
+    fetchGalery();
+  } catch (err) {
+    console.error("SUBMIT ERROR:", err);
+
+    alert(
+      err?.message ||
+      JSON.stringify(err) ||
+      "Terjadi kesalahan"
+    );
+  }
+};
+
+  // ==========================
   // DELETE
-  const handleDelete = (id) => {
-    setGalery(galery.filter((item) => item.id !== id));
-  };
+  // ==========================
+  const handleDelete = async (id) => {
+  const confirmDelete = window.confirm(
+    "Yakin ingin menghapus data?"
+  );
 
+  if (!confirmDelete) return;
+
+  try {
+    const item = galery.find((g) => g.id === id);
+
+    if (!item) return;
+
+    if (
+      item.image.includes(
+        "/storage/v1/object/public/androkidz/"
+      )
+    ) {
+      const imagePath = item.image.split(
+        "/storage/v1/object/public/androkidz/"
+      )[1];
+
+      if (imagePath) {
+        await supabase.storage
+          .from("androkidz")
+          .remove([imagePath]);
+      }
+    }
+
+    const { error } = await supabase
+      .from("galery")
+      .delete()
+      .eq("id", id);
+
+    if (error) throw error;
+
+    fetchGalery();
+
+    alert("Data berhasil dihapus");
+  } catch (err) {
+    console.error("DELETE ERROR:", err);
+
+    alert(
+      err?.message ||
+      JSON.stringify(err) ||
+      "Gagal menghapus data"
+    );
+  }
+};
+
+  // ==========================
   // EDIT
+  // ==========================
   const handleEdit = (item) => {
     setForm({
       judul: item.judul,
@@ -91,18 +220,21 @@ function AdminGalery() {
     });
 
     setEditId(item.id);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   return (
     <div>
-
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
         Kelola Galery
       </h1>
 
       {/* FORM */}
       <div className="bg-white rounded-2xl shadow p-6 mb-6">
-
         <h2 className="text-xl font-semibold mb-4">
           {editId ? "Edit Galery" : "Tambah Galery"}
         </h2>
@@ -111,8 +243,7 @@ function AdminGalery() {
           onSubmit={handleSubmit}
           className="space-y-4"
         >
-
-          {/* INPUT IMAGE */}
+          {/* IMAGE */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Upload Gambar
@@ -126,7 +257,14 @@ function AdminGalery() {
             />
           </div>
 
-          {/* PREVIEW IMAGE */}
+          {/* LOADING */}
+          {loading && (
+            <p className="text-blue-600">
+              Uploading gambar...
+            </p>
+          )}
+
+          {/* PREVIEW */}
           {form.image && (
             <img
               src={form.image}
@@ -150,60 +288,66 @@ function AdminGalery() {
           />
 
           {/* BUTTON */}
-          <button className="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition">
-            {editId ? "Update Galery" : "Tambah Galery"}
+          <button
+            type="submit"
+            className="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition"
+          >
+            {editId
+              ? "Update Galery"
+              : "Tambah Galery"}
           </button>
-
         </form>
       </div>
 
-      {/* LIST GALERY */}
+      {/* LIST */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {galery.length === 0 ? (
+          <div className="col-span-full text-center py-10 text-gray-500">
+            Belum ada data galery
+          </div>
+        ) : (
+          galery.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white rounded-2xl shadow overflow-hidden"
+            >
+              <img
+                src={item.image}
+                alt={item.judul}
+                className="w-full h-52 object-cover"
+              />
 
-        {galery.map((item) => (
+              <div className="p-4">
+                <h3 className="font-semibold text-lg mb-4">
+                  {item.judul}
+                </h3>
 
-          <div
-            key={item.id}
-            className="bg-white rounded-2xl shadow overflow-hidden"
-          >
+                <div className="flex gap-2">
+                  <button
+                    onClick={() =>
+                      handleEdit(item)
+                    }
+                    className="flex-1 bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500 transition"
+                  >
+                    Edit
+                  </button>
 
-            <img
-              src={item.image}
-              alt={item.judul}
-              className="w-full h-52 object-cover"
-            />
-
-            <div className="p-4">
-
-              <h3 className="font-semibold text-lg mb-4">
-                {item.judul}
-              </h3>
-
-              <div className="flex gap-2">
-
-                <button
-                  onClick={() => handleEdit(item)}
-                  className="flex-1 bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500 transition"
-                >
-                  Edit
-                </button>
-
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition"
-                >
-                  Hapus
-                </button>
-
+                  <button
+                    onClick={() =>
+                      handleDelete(item.id)
+                    }
+                    className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition"
+                  >
+                    Hapus
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-
-        ))}
-
+          ))
+        )}
       </div>
     </div>
   );
 }
 
-export default AdminGalery;
+export default AdminGalery; 
