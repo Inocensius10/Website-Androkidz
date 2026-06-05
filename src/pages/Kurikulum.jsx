@@ -13,7 +13,7 @@ function Kurikulum() {
       ],
     },
     {
-      title: "Junior 1",
+      title: "Junior",
       age: "7 - 11 Tahun",
       color: "blue",
       items: [
