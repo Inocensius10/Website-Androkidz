@@ -1,67 +1,151 @@
 function Kurikulum() {
+  const programs = [
+    {
+      title: "Little Engineer",
+      age: "4 - 6 Tahun",
+      color: "orange",
+      items: [
+        "Motorik dan Logika Dasar",
+        "Puzzle & Problem Solving",
+        "Robotik Dasar",
+        "Kreativitas dan Imajinasi",
+        "Belajar Melalui Bermain",
+      ],
+    },
+    {
+      title: "Junior 1",
+      age: "7 - 11 Tahun",
+      color: "blue",
+      items: [
+        "Robotik dan Elektronika Dasar",
+        "Computational Thinking",
+        "Sensor dan Mekanik",
+        "Project Based Learning",
+        "Problem Solving Terstruktur",
+      ],
+    },
+    {
+      title: "Teenager",
+      age: "12 - 15 Tahun",
+      color: "orange",
+      items: [
+        "Coding Dasar",
+        "Web Development",
+        "Artificial Intelligence (AI)",
+        "Project Digital Modern",
+        "Persiapan Skill Masa Depan",
+      ],
+    },
+  ];
+
   return (
-    <div className="pt-28 px-6 min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto text-center">
-        
-        {/* TITLE */}
-        <h1 className="text-4xl font-bold text-blue-900 mb-6">
-          Kurikulum Pembelajaran
-        </h1>
+    <div className="pt-28 pb-20 px-6 bg-white min-h-screen">
+      <div className="max-w-6xl mx-auto">
 
-        <p className="text-lg text-gray-600 mb-12">
-          Kurikulum AndroKidz dirancang bertahap sesuai usia untuk membangun
-          kreativitas, logika, dan kemampuan teknologi anak sejak dini.
-        </p>
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
+            Program Pembelajaran
+          </h1>
 
-        {/* CARD SECTION */}
+          <p className="text-gray-600 text-lg max-w-3xl mx-auto">
+            Kurikulum AndroKidz dirancang secara bertahap sesuai usia anak
+            agar proses belajar menjadi lebih efektif, menyenangkan, dan
+            relevan dengan perkembangan teknologi masa depan.
+          </p>
+        </div>
+
+        {/* Program */}
         <div className="grid md:grid-cols-3 gap-8">
 
-          {/* YOUNG ENGINEER */}
-          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition text-left">
-            <h2 className="text-xl font-semibold text-blue-800 mb-2">
-              Young Engineer
-            </h2>
-            <p className="text-sm text-gray-500 mb-4">
-              TK (mulai umur 4 tahun)
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              Anak diperkenalkan dengan berbagai alat dasar dan mulai belajar
-              merakit sederhana. Fokus utama adalah melatih motorik halus,
-              kreativitas, dan imajinasi melalui aktivitas yang menyenangkan.
-            </p>
-          </div>
+          {programs.map((program, index) => (
+            <div
+              key={index}
+              className={`
+                bg-white
+                rounded-3xl
+                shadow-lg
+                hover:shadow-2xl
+                transition-all
+                duration-300
+                border-2
+                ${
+                  program.color === "orange"
+                    ? "border-orange-400"
+                    : "border-blue-900"
+                }
+              `}
+            >
+              <div className="p-8">
 
-          {/* TEENAGER */}
-          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition text-left">
-            <h2 className="text-xl font-semibold text-blue-800 mb-2">
-              Teenager
-            </h2>
-            <p className="text-sm text-gray-500 mb-4">
-              SD
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              Anak mulai belajar bagaimana mengendalikan sesuatu agar dapat
-              bergerak. Mereka memahami konsep dasar mekanik dan logika sederhana
-              dalam sistem robotik.
-            </p>
-          </div>
+                <h2
+                  className={`
+                    text-2xl
+                    font-bold
+                    mb-2
+                    ${
+                      program.color === "orange"
+                        ? "text-orange-500"
+                        : "text-blue-900"
+                    }
+                  `}
+                >
+                  {program.title}
+                </h2>
 
-          {/* JUNIOR */}
-          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition text-left">
-            <h2 className="text-xl font-semibold text-blue-800 mb-2">
-              Junior
-            </h2>
-            <p className="text-sm text-gray-500 mb-4">
-              SMP
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              Siswa mulai belajar coding untuk mengendalikan robot. Fokus pada
-              logika pemrograman, problem solving, dan bagaimana membuat robot
-              dapat bergerak secara otomatis.
-            </p>
-          </div>
+                <p className="text-sm text-gray-500 mb-6">
+                  Usia {program.age}
+                </p>
+
+                <ul className="space-y-3">
+                  {program.items.map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-2 text-gray-700"
+                    >
+                      <span
+                        className={`
+                          mt-1.5
+                          w-2
+                          h-2
+                          rounded-full
+                          ${
+                            program.color === "orange"
+                              ? "bg-orange-500"
+                              : "bg-blue-900"
+                          }
+                        `}
+                      ></span>
+
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+
+              </div>
+            </div>
+          ))}
 
         </div>
+
+        {/* Penjelasan Tambahan */}
+        <div className="mt-16 bg-gray-50 rounded-3xl p-8 shadow-sm">
+          <h3 className="text-2xl font-bold text-blue-900 mb-4 text-center">
+            Metode Pembelajaran
+          </h3>
+
+          <p className="text-gray-700 text-center leading-relaxed max-w-4xl mx-auto">
+            Seluruh program AndroKidz menggunakan metode
+            <span className="font-semibold"> Project Based Learning </span>
+            dan
+            <span className="font-semibold"> Fun Learning </span>
+            sehingga peserta didik tidak hanya memahami teori,
+            tetapi juga mampu membuat proyek nyata, melatih kreativitas,
+            berpikir kritis, kolaborasi, serta kemampuan problem solving
+            yang dibutuhkan di masa depan.
+          </p>
+        </div>
+
       </div>
     </div>
   );

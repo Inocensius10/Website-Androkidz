@@ -21,51 +21,52 @@ function AdminGuru() {
   }, []);
 
   const fetchGuru = async () => {
-
+  try {
     const { data, error } = await supabase
       .from("guru")
       .select("*")
       .order("id", { ascending: false });
 
-    if (error) {
-      console.log(error);
-    } else {
-      setGuru(data);
-    }
-  };
+    if (error) throw error;
+
+    setGuru(data || []);
+  } catch (err) {
+    console.error("FETCH GURU ERROR:", err);
+  }
+};
 
   // ================= UPLOAD FOTO =================
   const handleImageChange = async (e) => {
+  const file = e.target.files[0];
 
-    const file = e.target.files[0];
+  if (!file) return;
 
-    if (!file) return;
-
+  try {
     setLoading(true);
 
-    const fileName = `${Date.now()}-${file.name}`;
+    const fileName = `guru/${Date.now()}-${file.name}`;
 
     const { error: uploadError } = await supabase.storage
       .from("androkidz")
       .upload(fileName, file);
 
-    if (uploadError) {
-      console.log(uploadError);
-      setLoading(false);
-      return;
-    }
+    if (uploadError) throw uploadError;
 
     const { data } = supabase.storage
       .from("androkidz")
       .getPublicUrl(fileName);
 
-    setForm({
-      ...form,
+    setForm((prev) => ({
+      ...prev,
       foto: data.publicUrl,
-    });
-
+    }));
+  } catch (err) {
+    console.error(err);
+    alert(err.message || "Gagal upload foto");
+  } finally {
     setLoading(false);
-  };
+  }
+};
 
   // ================= SUBMIT =================
   const handleSubmit = async (e) => {
@@ -224,9 +225,7 @@ function AdminGuru() {
             />
 
             {/* KELAS */}
-            <input
-              type="text"
-              placeholder="Kelas Mengajar"
+            <select
               value={form.kelas}
               onChange={(e) =>
                 setForm({
@@ -235,7 +234,27 @@ function AdminGuru() {
                 })
               }
               className="w-full border rounded-lg px-4 py-2"
-            />
+            >
+              <option value="">
+                Pilih Kelas
+              </option>
+
+              <option value="Little Engineer">
+                Little Engineer
+              </option>
+
+              <option value="Junior 1">
+                Junior 1
+              </option>
+
+              <option value="Junior 2">
+                Junior 2
+              </option>
+
+              <option value="Teenager">
+                Teenager
+              </option>
+            </select>
 
             {/* BUTTON */}
             <button
@@ -271,9 +290,16 @@ function AdminGuru() {
                 <div className="flex items-center gap-4">
 
                   <img
-                    src={item.foto}
+                    src={
+                      item.foto ||
+                      "https://via.placeholder.com/150"
+                    }
                     alt={item.nama}
-                    className="w-16 h-16 object-cover rounded-full"
+                    className="w-16 h-16 object-cover rounded-full border"
+                    onError={(e) => {
+                      e.target.src =
+                        "https://via.placeholder.com/150";
+                    }}
                   />
 
                   <div>
